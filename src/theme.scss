@@ -1,0 +1,18 @@
+// Προσαρμογή του Bootstrap 5.3. Οι μεταβλητές μπαίνουν ΠΡΙΝ το import του Bootstrap.
+// Calibri όπου υπάρχει (Windows, Office). Αλλού το Carlito, που έχει ίδιες διαστάσεις γραμμάτων
+// και φορτώνεται από το Google Fonts (index.html).
+$font-family-sans-serif: Calibri, Carlito, 'Segoe UI', 'Noto Sans', Arial, sans-serif;
+$font-size-base: 1rem;
+$headings-font-weight: 700;
+
+$primary: #0b5c8e;
+$warning: #f2b600;
+$dark: #0b2f4a;
+
+$border-radius: 0.3rem;
+$border-radius-sm: 0.25rem;
+$border-radius-lg: 0.4rem;
+
+$offcanvas-horizontal-width: 420px;
+
+@import 'bootstrap/scss/bootstrap';

@@ -1,0 +1,406 @@
+/* Τα κουμπιά, η μπάρα, οι καρτέλες, η φόρμα και το παράθυρο εκδήλωσης έρχονται από το Bootstrap
+   (theme.scss). Εδώ μένουν μόνο ο χάρτης, οι πινέζες και λίγες προσαρμογές. */
+:root {
+  --sea: #cbdfe8;
+  --land: #fbfaf6;
+  --land-hover: #f0eee4;
+  --land-line: #a9bcc4;
+  --neighbor: #e5e9e7;
+  --pin-edge: #ffffff;
+  --glyph-on-color: #ffffff;
+  --brand-accent: #f2b600;
+  --live: #2b8a3e;
+}
+[data-bs-theme='dark'] {
+  --sea: #0a1a22;
+  --land: #182a33;
+  --land-hover: #20363f;
+  --land-line: #36566a;
+  --neighbor: #121f26;
+  --pin-edge: #0b1217;
+  --live: #51cf66;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 2000;
+  background: var(--bs-dark);
+}
+
+/* ------------------------------------------------------------------ app shell */
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  padding-left: max(16px, env(safe-area-inset-left, 0px)) !important;
+  padding-right: max(16px, env(safe-area-inset-right, 0px)) !important;
+  position: relative;
+  z-index: 1200;
+}
+.brand-mark path {
+  fill: var(--brand-accent);
+}
+.brand-mark .brand-mark-glyph {
+  fill: var(--bs-dark);
+}
+.search {
+  min-width: 200px;
+  max-width: 440px;
+}
+.search .form-control::-webkit-search-cancel-button {
+  filter: invert(1);
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-block: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  scrollbar-width: thin;
+}
+.filters .btn {
+  flex: none;
+}
+
+/* Κουμπί τύπου εκδήλωσης (φίλτρα και φόρμα): Bootstrap outline με το χρώμα του τύπου */
+.type-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-border-color: var(--bs-border-color);
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--c) 8%, var(--bs-body-bg));
+  --bs-btn-hover-border-color: var(--c);
+  --bs-btn-active-color: var(--bs-body-color);
+  --bs-btn-active-bg: color-mix(in srgb, var(--c) 14%, var(--bs-body-bg));
+  --bs-btn-active-border-color: var(--c);
+}
+.type-filter.is-on,
+.btn-check:checked + .type-filter {
+  color: var(--bs-body-color);
+  background: color-mix(in srgb, var(--c) 14%, var(--bs-body-bg));
+  border-color: var(--c);
+}
+.type-filter.is-off {
+  color: var(--bs-secondary-color);
+}
+.type-filter-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--bs-border-radius-sm);
+  display: inline-grid;
+  place-items: center;
+  background: var(--c);
+  color: var(--glyph-on-color);
+  flex: none;
+}
+.type-filter.is-off .type-filter-icon {
+  background: transparent;
+  color: var(--c);
+  box-shadow: inset 0 0 0 1px var(--bs-border-color);
+}
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.type-grid .btn {
+  min-width: 0;
+  white-space: normal;
+}
+
+/* ------------------------------------------------------------------ stage + map */
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.map {
+  position: absolute;
+  inset: 0;
+  font-family: var(--bs-body-font-family);
+}
+.map.leaflet-container {
+  background: var(--sea);
+}
+.map--adding,
+.map--adding .leaflet-interactive {
+  cursor: crosshair !important;
+}
+.leaflet-control-attribution {
+  font-size: 11px;
+  background: color-mix(in srgb, var(--bs-body-bg) 88%, transparent) !important;
+  color: var(--bs-secondary-color);
+}
+.leaflet-control-attribution a {
+  color: var(--bs-link-color);
+}
+.leaflet-touch .leaflet-bar,
+.leaflet-bar {
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  box-shadow: var(--bs-box-shadow-sm);
+  overflow: hidden;
+}
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border-bottom-color: var(--bs-border-color);
+}
+.leaflet-bar a:hover {
+  background: var(--bs-tertiary-bg);
+}
+.leaflet-bottom.leaflet-left {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+.map-notices {
+  position: absolute;
+  z-index: 1000;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Σκοτεινό θέμα πάνω στα tiles του OpenStreetMap (όταν δεν υπάρχει κλειδί CARTO) */
+.tiles-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.6);
+}
+
+/* Διανυσματικό υπόβαθρο περιφερειών */
+.geo-region {
+  fill: var(--land);
+  stroke: var(--land-line);
+  fill-opacity: 1;
+  transition: fill 0.15s;
+}
+.geo-region:hover {
+  fill: var(--land-hover);
+}
+.map--adding .geo-region:hover {
+  fill: var(--land);
+}
+.geo-neighbor {
+  fill: var(--neighbor);
+  stroke: var(--land-line);
+  stroke-opacity: 0.5;
+}
+.map-label {
+  pointer-events: none;
+  white-space: nowrap;
+}
+.map-label span {
+  display: inline-block;
+}
+.map-label--region span {
+  transform: translate(-50%, -50%);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+.map-label--city {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.map-label--city span:last-child {
+  transform: translateY(-50%);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--bs-body-color);
+  text-shadow: 0 0 3px var(--land), 0 0 3px var(--land), 0 0 3px var(--land);
+}
+.city-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--bs-body-color);
+  transform: translate(-3px, -50%);
+}
+.map[data-zoom='tiny'] .map-label--region,
+.map[data-zoom='tiny'] .map-label--city span:last-child,
+.map[data-zoom='far'] .map-label--city span:last-child {
+  display: none;
+}
+.map[data-zoom='near'] .map-label--region {
+  display: none;
+}
+.map[data-zoom='mid'] .map-label--region span {
+  font-size: 13px;
+}
+
+/* Πινέζες σε σχήμα πινακίδας */
+.pin-wrap {
+  background: none;
+  border: 0;
+}
+.pin {
+  width: 34px;
+  height: 42px;
+  transform-origin: 17px 41px;
+  transition: transform 0.15s ease;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+.pin-body {
+  fill: var(--pin);
+  stroke: var(--pin-edge);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.pin-glyph {
+  fill: var(--glyph-on-color);
+}
+.leaflet-marker-icon:hover .pin,
+.leaflet-marker-icon:focus-visible .pin {
+  transform: scale(1.12);
+}
+.pin--selected {
+  transform: scale(1.3);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+}
+.pin--selected .pin-body {
+  stroke: var(--bs-body-color);
+  stroke-width: 2.5;
+}
+.leaflet-marker-icon:hover .pin--selected {
+  transform: scale(1.3);
+}
+.pin--draft {
+  animation: bob 1.4s ease-in-out infinite;
+}
+.pin--draft .pin-body {
+  stroke-dasharray: 4 3;
+  stroke: var(--bs-body-color);
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+.pin-tip.leaflet-tooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  box-shadow: var(--bs-box-shadow);
+  font-family: var(--bs-body-font-family);
+  font-size: 13px;
+  line-height: 1.3;
+}
+.pin-tip span {
+  color: var(--bs-secondary-color);
+  font-size: 12px;
+}
+.pin-tip.leaflet-tooltip-top::before {
+  border-top-color: var(--bs-border-color);
+}
+
+/* ------------------------------------------------------------------ παράθυρο εκδήλωσης (Offcanvas) */
+.event-panel {
+  z-index: 1100 !important;
+  box-shadow: var(--bs-box-shadow-lg);
+}
+.event-panel.offcanvas-end {
+  top: var(--topbar-h, 0px);
+}
+.event-panel--sheet {
+  height: 72vh !important;
+  border-top-left-radius: var(--bs-border-radius-lg);
+  border-top-right-radius: var(--bs-border-radius-lg);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.event-actions {
+  grid-template-columns: repeat(3, 1fr);
+}
+.event-actions .btn {
+  padding-left: 6px;
+  padding-right: 6px;
+  white-space: nowrap;
+}
+.type-badge {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.event-panel .tab-content,
+.event-panel .tab-pane.active {
+  flex: 1;
+  min-height: 0;
+}
+.event-panel .offcanvas-body {
+  min-height: 0;
+}
+.facts dt {
+  font-weight: 400;
+}
+.chat-list {
+  min-height: 160px;
+  overflow-y: auto;
+}
+.msg {
+  max-width: 85%;
+}
+.live-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--live) 25%, transparent);
+}
+
+@media (max-width: 575.98px) {
+  .brand-sub {
+    display: none;
+  }
+  .search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .type-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
