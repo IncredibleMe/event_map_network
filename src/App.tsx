@@ -245,7 +245,7 @@ export default function App() {
 
       <Collapse in={showFilters}>
         <div id="filters">
-          <FilterBar events={allEvents} active={active} onToggle={toggleType} onReset={() => setActive(ALL_TYPES())} />
+          {/* <FilterBar events={allEvents} active={active} onToggle={toggleType} onReset={() => setActive(ALL_TYPES())} /> */}
         </div>
       </Collapse>
 

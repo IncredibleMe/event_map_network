@@ -39,7 +39,7 @@ export default function NewEventForm({ draft, placement, ...rest }: Props) {
       className={`event-panel ${placement === 'bottom' ? 'event-panel--sheet' : ''}`}
       aria-labelledby="new-event-title"
     >
-      {draft && <FormBody key={`${draft.lat}`} draft={draft} {...rest} />}
+      {/* {draft && <FormBody key={`${draft.lat}`} draft={draft} {...rest} />} */}
     </Offcanvas>
   );
 }
